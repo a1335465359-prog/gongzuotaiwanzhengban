@@ -106,6 +106,22 @@ input::placeholder { color: var(--ink-3); }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { scrollbar-width: none; }
 
+/* 放假凭证：两侧票根缺口，不引入额外装饰图片 */
+.ticket-edge::before,
+.ticket-edge::after {
+  content: "";
+  position: absolute;
+  top: 45%;
+  z-index: 2;
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  background: var(--surface-1);
+  border: 1px solid var(--line);
+}
+.ticket-edge::before { left: -7px; }
+.ticket-edge::after { right: -7px; }
+
 /* 时间轨道刻度 */
 .tick-line {
   height: 1px;

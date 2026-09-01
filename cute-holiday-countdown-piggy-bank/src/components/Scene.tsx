@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Pig, { PigHandle } from "./Pig";
 import TonightNote from "./TonightNote";
@@ -9,6 +9,15 @@ import { useApp } from "../lib/useApp";
 import { useClock, Clock } from "../lib/useClock";
 import { useCoinDriver } from "../lib/useCoinDriver";
 import { fmtMoney } from "../lib/time";
+import type { WalletState } from "../lib/store";
+
+interface CoinBurst {
+  id: number;
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+}
 
 /**
  * 主场景 —— 一个安静、但有生命感的时间空间
@@ -36,19 +45,33 @@ export default function Scene() {
   const [quiet, setQuiet] = useState(false);
   const [greetVisible, setGreetVisible] = useState(true);
   const [lastCoin, setLastCoin] = useState(0);
+  const [coinBursts, setCoinBursts] = useState<CoinBurst[]>([]);
 
   const pigRef = useRef<PigHandle>(null);
+  const pigAnchorRef = useRef<HTMLDivElement>(null);
+  const incomeRef = useRef<HTMLButtonElement>(null);
   const prevPhase = useRef(clock.phase);
 
   const isWorking = clock.phase === "morning" || clock.phase === "afternoon" || clock.phase === "lunch";
-  const isOff = clock.phase === "after";
-  const isRest = clock.phase === "holiday" || clock.phase === "weekend" || clock.phase === "dayoff";
+
+  const launchCoins = useCallback(() => {
+    const source = pigAnchorRef.current?.getBoundingClientRect();
+    const target = incomeRef.current?.getBoundingClientRect();
+    if (!source || !target) return;
+    setCoinBursts(bursts => [...bursts.slice(-2), {
+      id: Date.now(),
+      startX: source.left + source.width * 0.58,
+      startY: source.top + source.height * 0.42,
+      endX: target.left + target.width * 0.5,
+      endY: target.top + target.height * 0.42,
+    }]);
+  }, []);
 
   /* 下班瞬间：off 庆祝动画 */
   useEffect(() => {
     const p = prevPhase.current;
     if ((p === "morning" || p === "afternoon" || p === "lunch") && clock.phase === "after") {
-      pigRef.current?.play("off");
+      void pigRef.current?.play("off");
     }
     prevPhase.current = clock.phase;
   }, [clock.phase]);
@@ -58,16 +81,17 @@ export default function Scene() {
   useEffect(() => {
     if (coinCount > lastCoin) {
       setLastCoin(coinCount);
-      pigRef.current?.play("coin");
+      void pigRef.current?.play("coin");
+      launchCoins();
     }
-  }, [coinCount, lastCoin]);
+  }, [coinCount, lastCoin, launchCoins]);
 
   /* 临近下班触发"看时间"（最后 2 小时内的某刻） */
   const lookTriggered = useRef(false);
   useEffect(() => {
     if (isWorking && clock.toOffWork !== null && clock.toOffWork < 2 * 3600000 && !lookTriggered.current) {
       lookTriggered.current = true;
-      pigRef.current?.play("look");
+      void pigRef.current?.play("look");
     }
   }, [isWorking, clock.toOffWork]);
 
@@ -86,10 +110,38 @@ export default function Scene() {
   const farEvents = clock.events.filter(e => e.kind !== "offwork").slice(0, 3);
   const greeting = greetingText(clock.now);
 
-  const restingPig = isOff || isRest;
+  const hour = new Date(clock.now).getHours();
+  const restingPig = hour >= 23 || hour < 6;
+
+  const treasuryWallet: WalletState = {
+    pot: state.potTotal,
+    bank: 0,
+    lifetimeEarned: state.potTotal,
+    pending: 0,
+    lastTick: 0,
+    todayEarned: clock.todayEarned,
+    todayCollected: 0,
+    todayWorkedMs: 0,
+    todayKey: "",
+    fishing: null,
+    fishSessions: [],
+    history: {},
+    weekSettledKey: null,
+    totalTaps: state.taps,
+  };
 
   return (
     <div className="relative h-dvh w-full overflow-hidden" style={{ background: "var(--bg)" }}>
+
+      <AnimatePresence>
+        {coinBursts.map(burst => (
+          <CoinFlight
+            key={burst.id}
+            burst={burst}
+            onComplete={() => setCoinBursts(items => items.filter(item => item.id !== burst.id))}
+          />
+        ))}
+      </AnimatePresence>
 
       {/* ============ 顶栏 ============ */}
       <div className="safe-top absolute inset-x-0 top-0 z-20 flex items-center justify-between px-6 pt-3">
@@ -171,16 +223,22 @@ export default function Scene() {
           transition={{ duration: 1.2, delay: 0.3 }}
           className="flex flex-col items-center gap-4"
         >
-          <Pig
-            ref={pigRef}
-            size={190}
-            resting={restingPig}
-            onTap={() => bumpTap(clock.rate.perSec * (3 + Math.random() * 5))}
-            onLongPress={() => setOpenTreasury(true)}
-          />
+          <div ref={pigAnchorRef}>
+            <Pig
+              ref={pigRef}
+              size={190}
+              resting={restingPig}
+              onTap={() => {
+                bumpTap(clock.rate.perSec * (3 + Math.random() * 5));
+                launchCoins();
+              }}
+              onLongPress={() => setOpenTreasury(true)}
+            />
+          </div>
 
           {/* 今日已赚 —— 第二重要数字，随猪一体，点击展开小金库 */}
           <button
+            ref={incomeRef}
             onClick={() => setOpenTreasury(true)}
             className="group text-center"
             style={{ background: "transparent", border: "none", padding: 0, cursor: "pointer" }}
@@ -190,16 +248,11 @@ export default function Scene() {
             </div>
             <div className="mt-1 flex items-baseline justify-center gap-1">
               <span className="text-[13px]" style={{ color: "var(--ink-2)" }}>¥</span>
-              <span
+              <MoneyTicker
+                value={clock.todayEarned}
                 className="num-heavy leading-none"
-                style={{
-                  fontSize: "clamp(34px, 10vw, 52px)",
-                  color: "var(--gold)",
-                  transition: "transform .3s",
-                }}
-              >
-                {formatIncome(clock.todayEarned)}
-              </span>
+                style={{ fontSize: "clamp(34px, 10vw, 52px)", color: "var(--gold)" }}
+              />
             </div>
             {isWorking && (
               <div className="mt-1 text-[10.5px]" style={{ color: "var(--ink-4)" }}>
@@ -265,7 +318,7 @@ export default function Scene() {
               className="text-[11px]"
               style={{ background: "transparent", border: "none", padding: "4px 6px", color: "var(--ink-3)", cursor: "pointer" }}
             >
-              全部倒计时
+              放假倒计时
             </button>
           </div>
         </motion.div>
@@ -280,12 +333,7 @@ export default function Scene() {
       <TreasuryDrawer
         open={openTreasury} onClose={() => setOpenTreasury(false)}
         clock={clock} settings={settings}
-        wallet={{
-          pot: state.potTotal, bank: 0, lifetimeEarned: state.potTotal, pending: 0,
-          lastTick: 0, todayEarned: clock.todayEarned, todayCollected: 0,
-          todayWorkedMs: 0, todayKey: "", fishing: null, fishSessions: [],
-          history: {}, weekSettledKey: null, totalTaps: state.taps,
-        } as any}
+        wallet={treasuryWallet}
         onEditGoal={(name, amount) => setSettings({ goalName: name, goalAmount: amount })}
       />
       <SettingsDrawer
@@ -293,6 +341,82 @@ export default function Scene() {
         settings={settings} onChange={setSettings} onReset={resetAll}
       />
     </div>
+  );
+}
+
+function CoinFlight({ burst, onComplete }: { burst: CoinBurst; onComplete: () => void }) {
+  return (
+    <div className="pointer-events-none fixed inset-0 z-30" aria-hidden="true">
+      {[0, 1, 2].map(index => {
+        const spread = (index - 1) * 13;
+        return (
+          <motion.span
+            key={index}
+            initial={{ x: burst.startX + spread, y: burst.startY, opacity: 0, scale: 0.62, rotate: -25 + index * 15 }}
+            animate={{
+              x: [burst.startX + spread, burst.startX + spread * 1.8, burst.endX + spread * 0.24],
+              y: [burst.startY, burst.startY - 42 - index * 7, burst.endY],
+              opacity: [0, 1, 1, 0],
+              scale: [0.62, 1.04, 0.72],
+              rotate: [-25 + index * 15, 18 + index * 35, 55 + index * 45],
+            }}
+            transition={{ duration: 0.78, delay: index * 0.1, ease: [0.22, 0.75, 0.22, 1] }}
+            onAnimationComplete={index === 2 ? onComplete : undefined}
+            className="fixed flex h-[18px] w-[18px] items-center justify-center rounded-full text-[10px]"
+            style={{
+              left: 0,
+              top: 0,
+              color: "#765723",
+              background: "#D8AC52",
+              border: "1px solid #B98935",
+              boxShadow: "inset 0 0 0 2px rgba(255,240,171,.55), 0 3px 8px rgba(91,63,20,.18)",
+              fontWeight: 650,
+            }}
+          >
+            ¥
+          </motion.span>
+        );
+      })}
+    </div>
+  );
+}
+
+function MoneyTicker({
+  value,
+  decimals = 2,
+  className,
+  style,
+}: {
+  value: number;
+  decimals?: number;
+  className?: string;
+  style?: CSSProperties;
+}) {
+  const text = value.toFixed(decimals);
+  return (
+    <span className={className} style={{ ...style, display: "inline-flex" }} aria-label={text}>
+      {text.split("").map((character, index) => {
+        if (!/\d/.test(character)) {
+          return <span key={`${index}-${character}`} aria-hidden="true" style={{ width: "0.28em" }}>{character}</span>;
+        }
+        return (
+          <span key={index} className="relative inline-block overflow-hidden" style={{ width: "0.61em", height: "1em" }} aria-hidden="true">
+            <AnimatePresence initial={false} mode="popLayout">
+              <motion.span
+                key={`${index}-${character}`}
+                initial={{ y: "78%", opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: "-78%", opacity: 0 }}
+                transition={{ duration: 0.24, ease: [0.22, 0.75, 0.22, 1] }}
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                {character}
+              </motion.span>
+            </AnimatePresence>
+          </span>
+        );
+      })}
+    </span>
   );
 }
 
@@ -315,14 +439,18 @@ function TodayGoalStrip({
           {Math.round(progress * 100)}%
         </span>
       </div>
-      <div className="mt-1.5 h-[3px] w-full rounded-full" style={{ background: "var(--line)" }}>
-        <div
-          className="h-full rounded-full transition-all duration-700"
-          style={{ width: `${progress * 100}%`, background: "var(--gold)" }}
+      <div className="mt-1.5 h-[3px] w-full overflow-hidden rounded-full" style={{ background: "var(--line)" }}>
+        <motion.div
+          className="h-full rounded-full"
+          animate={{ width: `${progress * 100}%` }}
+          transition={{ type: "spring", stiffness: 150, damping: 24, mass: 0.65 }}
+          style={{ background: "var(--gold)" }}
         />
       </div>
-      <div className="mt-1 text-[10px]" style={{ color: "var(--ink-4)" }}>
-        已存 {fmtMoney(saved)} / {fmtMoney(amount)}
+      <div className="mt-1 flex items-center justify-center gap-1 text-[10px]" style={{ color: "var(--ink-4)" }}>
+        <span>已存 ¥</span>
+        <MoneyTicker value={saved} className="num" />
+        <span>/ {fmtMoney(amount)}</span>
       </div>
     </button>
   );
@@ -397,9 +525,4 @@ function greetingText(now: number): string {
   if (h < 18) return "下午好";
   if (h < 22) return "晚上好";
   return "夜深了";
-}
-
-/* 收入显示：始终两位小数 */
-function formatIncome(v: number): string {
-  return v.toFixed(2);
 }

@@ -29,27 +29,27 @@ export default function SettingsDrawer({ open, onClose, settings, onChange, onRe
 
         {/* 主题 */}
         <Group label="外观">
-          <SegmentControl
+          <SegmentControl<Settings["theme"]>
             options={[
               { v: "auto", label: "跟随系统" },
               { v: "light", label: "浅色" },
               { v: "dark", label: "深色" },
             ]}
             value={settings.theme}
-            onChange={v => onChange({ theme: v as any })}
+            onChange={v => onChange({ theme: v })}
           />
         </Group>
 
         {/* 工资 */}
         <Group label="工资">
-          <SegmentControl
+          <SegmentControl<WageMode>
             options={[
               { v: "monthly", label: "月薪" },
               { v: "daily", label: "日薪" },
               { v: "hourly", label: "时薪" },
             ]}
             value={settings.mode}
-            onChange={v => onChange({ mode: v as WageMode })}
+            onChange={v => onChange({ mode: v })}
           />
           <Field label="金额">
             <input

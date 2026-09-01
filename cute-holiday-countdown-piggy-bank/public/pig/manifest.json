@@ -1,0 +1,1156 @@
+{
+  "actions": [
+    {
+      "action": "idle",
+      "source": "01.jpg",
+      "label": "待机呼吸",
+      "frames": 12,
+      "fps": 10,
+      "sampledBackground": "rgb(4, 237, 253)",
+      "canvas": "512x512",
+      "alignment": "largest-subject center; baseline y=494",
+      "frameReports": [
+        {
+          "frame": 1,
+          "crop": {
+            "left": 0,
+            "top": 260
+          },
+          "anchor": {
+            "x": 36,
+            "y": 100
+          }
+        },
+        {
+          "frame": 2,
+          "crop": {
+            "left": 281,
+            "top": 260
+          },
+          "anchor": {
+            "x": 38,
+            "y": 94
+          }
+        },
+        {
+          "frame": 3,
+          "crop": {
+            "left": 561,
+            "top": 260
+          },
+          "anchor": {
+            "x": 44,
+            "y": 93
+          }
+        },
+        {
+          "frame": 4,
+          "crop": {
+            "left": 842,
+            "top": 260
+          },
+          "anchor": {
+            "x": 53,
+            "y": 93
+          }
+        },
+        {
+          "frame": 5,
+          "crop": {
+            "left": 0,
+            "top": 660
+          },
+          "anchor": {
+            "x": 39,
+            "y": 99
+          }
+        },
+        {
+          "frame": 6,
+          "crop": {
+            "left": 281,
+            "top": 660
+          },
+          "anchor": {
+            "x": 41,
+            "y": 99
+          }
+        },
+        {
+          "frame": 7,
+          "crop": {
+            "left": 561,
+            "top": 660
+          },
+          "anchor": {
+            "x": 44,
+            "y": 99
+          }
+        },
+        {
+          "frame": 8,
+          "crop": {
+            "left": 842,
+            "top": 660
+          },
+          "anchor": {
+            "x": 55,
+            "y": 99
+          }
+        },
+        {
+          "frame": 9,
+          "crop": {
+            "left": 0,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 41,
+            "y": 97
+          }
+        },
+        {
+          "frame": 10,
+          "crop": {
+            "left": 281,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 42,
+            "y": 97
+          }
+        },
+        {
+          "frame": 11,
+          "crop": {
+            "left": 561,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 46,
+            "y": 97
+          }
+        },
+        {
+          "frame": 12,
+          "crop": {
+            "left": 842,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 55,
+            "y": 97
+          }
+        }
+      ]
+    },
+    {
+      "action": "blink",
+      "source": "02.jpg",
+      "label": "眨眼待机",
+      "frames": 12,
+      "fps": 12,
+      "sampledBackground": "rgb(9, 229, 252)",
+      "canvas": "512x512",
+      "alignment": "largest-subject center; baseline y=494",
+      "frameReports": [
+        {
+          "frame": 1,
+          "crop": {
+            "left": 0,
+            "top": 260
+          },
+          "anchor": {
+            "x": 35,
+            "y": 84
+          }
+        },
+        {
+          "frame": 2,
+          "crop": {
+            "left": 281,
+            "top": 260
+          },
+          "anchor": {
+            "x": 46,
+            "y": 80
+          }
+        },
+        {
+          "frame": 3,
+          "crop": {
+            "left": 561,
+            "top": 260
+          },
+          "anchor": {
+            "x": 51,
+            "y": 78
+          }
+        },
+        {
+          "frame": 4,
+          "crop": {
+            "left": 842,
+            "top": 260
+          },
+          "anchor": {
+            "x": 58,
+            "y": 78
+          }
+        },
+        {
+          "frame": 5,
+          "crop": {
+            "left": 0,
+            "top": 660
+          },
+          "anchor": {
+            "x": 36,
+            "y": 78
+          }
+        },
+        {
+          "frame": 6,
+          "crop": {
+            "left": 281,
+            "top": 660
+          },
+          "anchor": {
+            "x": 47,
+            "y": 78
+          }
+        },
+        {
+          "frame": 7,
+          "crop": {
+            "left": 561,
+            "top": 660
+          },
+          "anchor": {
+            "x": 51,
+            "y": 77
+          }
+        },
+        {
+          "frame": 8,
+          "crop": {
+            "left": 842,
+            "top": 660
+          },
+          "anchor": {
+            "x": 61,
+            "y": 77
+          }
+        },
+        {
+          "frame": 9,
+          "crop": {
+            "left": 0,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 38,
+            "y": 71
+          }
+        },
+        {
+          "frame": 10,
+          "crop": {
+            "left": 281,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 48,
+            "y": 69
+          }
+        },
+        {
+          "frame": 11,
+          "crop": {
+            "left": 561,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 52,
+            "y": 69
+          }
+        },
+        {
+          "frame": 12,
+          "crop": {
+            "left": 842,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 59,
+            "y": 69
+          }
+        }
+      ]
+    },
+    {
+      "action": "ear",
+      "source": "03.jpg",
+      "label": "耳朵轻颤",
+      "frames": 12,
+      "fps": 10,
+      "sampledBackground": "rgb(8, 234, 252)",
+      "canvas": "512x512",
+      "alignment": "largest-subject center; baseline y=494",
+      "frameReports": [
+        {
+          "frame": 1,
+          "crop": {
+            "left": 0,
+            "top": 260
+          },
+          "anchor": {
+            "x": 37,
+            "y": 99
+          }
+        },
+        {
+          "frame": 2,
+          "crop": {
+            "left": 281,
+            "top": 260
+          },
+          "anchor": {
+            "x": 38,
+            "y": 93
+          }
+        },
+        {
+          "frame": 3,
+          "crop": {
+            "left": 561,
+            "top": 260
+          },
+          "anchor": {
+            "x": 44,
+            "y": 93
+          }
+        },
+        {
+          "frame": 4,
+          "crop": {
+            "left": 842,
+            "top": 260
+          },
+          "anchor": {
+            "x": 54,
+            "y": 91
+          }
+        },
+        {
+          "frame": 5,
+          "crop": {
+            "left": 0,
+            "top": 660
+          },
+          "anchor": {
+            "x": 40,
+            "y": 96
+          }
+        },
+        {
+          "frame": 6,
+          "crop": {
+            "left": 281,
+            "top": 660
+          },
+          "anchor": {
+            "x": 41,
+            "y": 96
+          }
+        },
+        {
+          "frame": 7,
+          "crop": {
+            "left": 561,
+            "top": 660
+          },
+          "anchor": {
+            "x": 45,
+            "y": 96
+          }
+        },
+        {
+          "frame": 8,
+          "crop": {
+            "left": 842,
+            "top": 660
+          },
+          "anchor": {
+            "x": 55,
+            "y": 96
+          }
+        },
+        {
+          "frame": 9,
+          "crop": {
+            "left": 0,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 41,
+            "y": 94
+          }
+        },
+        {
+          "frame": 10,
+          "crop": {
+            "left": 281,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 42,
+            "y": 94
+          }
+        },
+        {
+          "frame": 11,
+          "crop": {
+            "left": 561,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 47,
+            "y": 94
+          }
+        },
+        {
+          "frame": 12,
+          "crop": {
+            "left": 842,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 56,
+            "y": 94
+          }
+        }
+      ]
+    },
+    {
+      "action": "yawn",
+      "source": "04.jpg",
+      "label": "困倦打哈欠",
+      "frames": 12,
+      "fps": 10,
+      "sampledBackground": "rgb(6, 232, 252)",
+      "canvas": "512x512",
+      "alignment": "largest-subject center; baseline y=494",
+      "frameReports": [
+        {
+          "frame": 1,
+          "crop": {
+            "left": 0,
+            "top": 260
+          },
+          "anchor": {
+            "x": 34,
+            "y": 86
+          }
+        },
+        {
+          "frame": 2,
+          "crop": {
+            "left": 281,
+            "top": 260
+          },
+          "anchor": {
+            "x": 31,
+            "y": 81
+          }
+        },
+        {
+          "frame": 3,
+          "crop": {
+            "left": 561,
+            "top": 260
+          },
+          "anchor": {
+            "x": 33,
+            "y": 81
+          }
+        },
+        {
+          "frame": 4,
+          "crop": {
+            "left": 842,
+            "top": 260
+          },
+          "anchor": {
+            "x": 44,
+            "y": 80
+          }
+        },
+        {
+          "frame": 5,
+          "crop": {
+            "left": 0,
+            "top": 660
+          },
+          "anchor": {
+            "x": 36,
+            "y": 78
+          }
+        },
+        {
+          "frame": 6,
+          "crop": {
+            "left": 281,
+            "top": 660
+          },
+          "anchor": {
+            "x": 31,
+            "y": 77
+          }
+        },
+        {
+          "frame": 7,
+          "crop": {
+            "left": 561,
+            "top": 660
+          },
+          "anchor": {
+            "x": 36,
+            "y": 77
+          }
+        },
+        {
+          "frame": 8,
+          "crop": {
+            "left": 842,
+            "top": 660
+          },
+          "anchor": {
+            "x": 46,
+            "y": 75
+          }
+        },
+        {
+          "frame": 9,
+          "crop": {
+            "left": 0,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 38,
+            "y": 72
+          }
+        },
+        {
+          "frame": 10,
+          "crop": {
+            "left": 281,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 34,
+            "y": 71
+          }
+        },
+        {
+          "frame": 11,
+          "crop": {
+            "left": 561,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 38,
+            "y": 71
+          }
+        },
+        {
+          "frame": 12,
+          "crop": {
+            "left": 842,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 47,
+            "y": 71
+          }
+        }
+      ]
+    },
+    {
+      "action": "look",
+      "source": "05.jpg",
+      "label": "抬头看时间",
+      "frames": 12,
+      "fps": 10,
+      "sampledBackground": "rgb(14, 228, 250)",
+      "canvas": "512x512",
+      "alignment": "largest-subject center; baseline y=494",
+      "frameReports": [
+        {
+          "frame": 1,
+          "crop": {
+            "left": 0,
+            "top": 260
+          },
+          "anchor": {
+            "x": 38,
+            "y": 93
+          }
+        },
+        {
+          "frame": 2,
+          "crop": {
+            "left": 281,
+            "top": 260
+          },
+          "anchor": {
+            "x": 35,
+            "y": 88
+          }
+        },
+        {
+          "frame": 3,
+          "crop": {
+            "left": 561,
+            "top": 260
+          },
+          "anchor": {
+            "x": 44,
+            "y": 88
+          }
+        },
+        {
+          "frame": 4,
+          "crop": {
+            "left": 842,
+            "top": 260
+          },
+          "anchor": {
+            "x": 52,
+            "y": 88
+          }
+        },
+        {
+          "frame": 5,
+          "crop": {
+            "left": 0,
+            "top": 660
+          },
+          "anchor": {
+            "x": 39,
+            "y": 96
+          }
+        },
+        {
+          "frame": 6,
+          "crop": {
+            "left": 281,
+            "top": 660
+          },
+          "anchor": {
+            "x": 35,
+            "y": 96
+          }
+        },
+        {
+          "frame": 7,
+          "crop": {
+            "left": 561,
+            "top": 660
+          },
+          "anchor": {
+            "x": 44,
+            "y": 96
+          }
+        },
+        {
+          "frame": 8,
+          "crop": {
+            "left": 842,
+            "top": 660
+          },
+          "anchor": {
+            "x": 53,
+            "y": 96
+          }
+        },
+        {
+          "frame": 9,
+          "crop": {
+            "left": 0,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 41,
+            "y": 93
+          }
+        },
+        {
+          "frame": 10,
+          "crop": {
+            "left": 281,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 38,
+            "y": 93
+          }
+        },
+        {
+          "frame": 11,
+          "crop": {
+            "left": 561,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 42,
+            "y": 93
+          }
+        },
+        {
+          "frame": 12,
+          "crop": {
+            "left": 842,
+            "top": 1055
+          },
+          "anchor": {
+            "x": 52,
+            "y": 93
+          }
+        }
+      ]
+    },
+    {
+      "action": "tap",
+      "source": "06.jpg",
+      "label": "点击回弹",
+      "frames": 12,
+      "fps": 12,
+      "sampledBackground": "rgb(5, 234, 253)",
+      "canvas": "512x512",
+      "alignment": "largest-subject center; baseline y=494",
+      "frameReports": [
+        {
+          "frame": 1,
+          "crop": {
+            "left": 0,
+            "top": 280
+          },
+          "anchor": {
+            "x": 35,
+            "y": 105
+          }
+        },
+        {
+          "frame": 2,
+          "crop": {
+            "left": 281,
+            "top": 280
+          },
+          "anchor": {
+            "x": 42,
+            "y": 102
+          }
+        },
+        {
+          "frame": 3,
+          "crop": {
+            "left": 561,
+            "top": 280
+          },
+          "anchor": {
+            "x": 47,
+            "y": 88
+          }
+        },
+        {
+          "frame": 4,
+          "crop": {
+            "left": 842,
+            "top": 280
+          },
+          "anchor": {
+            "x": 62,
+            "y": 80
+          }
+        },
+        {
+          "frame": 5,
+          "crop": {
+            "left": 0,
+            "top": 680
+          },
+          "anchor": {
+            "x": 44,
+            "y": 80
+          }
+        },
+        {
+          "frame": 6,
+          "crop": {
+            "left": 281,
+            "top": 680
+          },
+          "anchor": {
+            "x": 47,
+            "y": 83
+          }
+        },
+        {
+          "frame": 7,
+          "crop": {
+            "left": 561,
+            "top": 680
+          },
+          "anchor": {
+            "x": 47,
+            "y": 111
+          }
+        },
+        {
+          "frame": 8,
+          "crop": {
+            "left": 842,
+            "top": 680
+          },
+          "anchor": {
+            "x": 53,
+            "y": 96
+          }
+        },
+        {
+          "frame": 9,
+          "crop": {
+            "left": 0,
+            "top": 1080
+          },
+          "anchor": {
+            "x": 40,
+            "y": 90
+          }
+        },
+        {
+          "frame": 10,
+          "crop": {
+            "left": 281,
+            "top": 1080
+          },
+          "anchor": {
+            "x": 44,
+            "y": 90
+          }
+        },
+        {
+          "frame": 11,
+          "crop": {
+            "left": 561,
+            "top": 1080
+          },
+          "anchor": {
+            "x": 50,
+            "y": 90
+          }
+        },
+        {
+          "frame": 12,
+          "crop": {
+            "left": 842,
+            "top": 1080
+          },
+          "anchor": {
+            "x": 62,
+            "y": 90
+          }
+        }
+      ]
+    },
+    {
+      "action": "coin",
+      "source": "07.jpg",
+      "label": "金币入槽",
+      "frames": 12,
+      "fps": 12,
+      "sampledBackground": "rgb(7, 233, 253)",
+      "canvas": "512x512",
+      "alignment": "largest-subject center; baseline y=494",
+      "frameReports": [
+        {
+          "frame": 1,
+          "crop": {
+            "left": 0,
+            "top": 280
+          },
+          "anchor": {
+            "x": 42,
+            "y": 0
+          }
+        },
+        {
+          "frame": 2,
+          "crop": {
+            "left": 281,
+            "top": 280
+          },
+          "anchor": {
+            "x": 44,
+            "y": -3
+          }
+        },
+        {
+          "frame": 3,
+          "crop": {
+            "left": 561,
+            "top": 280
+          },
+          "anchor": {
+            "x": 45,
+            "y": -2
+          }
+        },
+        {
+          "frame": 4,
+          "crop": {
+            "left": 842,
+            "top": 280
+          },
+          "anchor": {
+            "x": 46,
+            "y": -3
+          }
+        },
+        {
+          "frame": 5,
+          "crop": {
+            "left": 0,
+            "top": 730
+          },
+          "anchor": {
+            "x": 44,
+            "y": 62
+          }
+        },
+        {
+          "frame": 6,
+          "crop": {
+            "left": 281,
+            "top": 730
+          },
+          "anchor": {
+            "x": 46,
+            "y": 63
+          }
+        },
+        {
+          "frame": 7,
+          "crop": {
+            "left": 561,
+            "top": 730
+          },
+          "anchor": {
+            "x": 49,
+            "y": 63
+          }
+        },
+        {
+          "frame": 8,
+          "crop": {
+            "left": 842,
+            "top": 730
+          },
+          "anchor": {
+            "x": 50,
+            "y": 60
+          }
+        },
+        {
+          "frame": 9,
+          "crop": {
+            "left": 0,
+            "top": 1110
+          },
+          "anchor": {
+            "x": 44,
+            "y": 121
+          }
+        },
+        {
+          "frame": 10,
+          "crop": {
+            "left": 281,
+            "top": 1110
+          },
+          "anchor": {
+            "x": 44,
+            "y": 121
+          }
+        },
+        {
+          "frame": 11,
+          "crop": {
+            "left": 561,
+            "top": 1110
+          },
+          "anchor": {
+            "x": 46,
+            "y": 121
+          }
+        },
+        {
+          "frame": 12,
+          "crop": {
+            "left": 842,
+            "top": 1110
+          },
+          "anchor": {
+            "x": 45,
+            "y": 121
+          }
+        }
+      ]
+    },
+    {
+      "action": "off",
+      "source": "08.jpg",
+      "label": "下班庆祝",
+      "frames": 12,
+      "fps": 12,
+      "sampledBackground": "rgb(8, 235, 253)",
+      "canvas": "512x512",
+      "alignment": "largest-subject center; baseline y=494",
+      "frameReports": [
+        {
+          "frame": 1,
+          "crop": {
+            "left": 0,
+            "top": 260
+          },
+          "anchor": {
+            "x": 42,
+            "y": 96
+          }
+        },
+        {
+          "frame": 2,
+          "crop": {
+            "left": 281,
+            "top": 260
+          },
+          "anchor": {
+            "x": 47,
+            "y": 90
+          }
+        },
+        {
+          "frame": 3,
+          "crop": {
+            "left": 561,
+            "top": 260
+          },
+          "anchor": {
+            "x": 56,
+            "y": 90
+          }
+        },
+        {
+          "frame": 4,
+          "crop": {
+            "left": 842,
+            "top": 260
+          },
+          "anchor": {
+            "x": 50,
+            "y": 90
+          }
+        },
+        {
+          "frame": 5,
+          "crop": {
+            "left": 0,
+            "top": 685
+          },
+          "anchor": {
+            "x": 49,
+            "y": 102
+          }
+        },
+        {
+          "frame": 6,
+          "crop": {
+            "left": 281,
+            "top": 685
+          },
+          "anchor": {
+            "x": 55,
+            "y": 130
+          }
+        },
+        {
+          "frame": 7,
+          "crop": {
+            "left": 561,
+            "top": 685
+          },
+          "anchor": {
+            "x": 55,
+            "y": 130
+          }
+        },
+        {
+          "frame": 8,
+          "crop": {
+            "left": 842,
+            "top": 685
+          },
+          "anchor": {
+            "x": 49,
+            "y": 100
+          }
+        },
+        {
+          "frame": 9,
+          "crop": {
+            "left": 0,
+            "top": 1075
+          },
+          "anchor": {
+            "x": 52,
+            "y": 96
+          }
+        },
+        {
+          "frame": 10,
+          "crop": {
+            "left": 281,
+            "top": 1075
+          },
+          "anchor": {
+            "x": 57,
+            "y": 96
+          }
+        },
+        {
+          "frame": 11,
+          "crop": {
+            "left": 561,
+            "top": 1075
+          },
+          "anchor": {
+            "x": 58,
+            "y": 96
+          }
+        },
+        {
+          "frame": 12,
+          "crop": {
+            "left": 842,
+            "top": 1075
+          },
+          "anchor": {
+            "x": 54,
+            "y": 96
+          }
+        }
+      ]
+    }
+  ]
+}

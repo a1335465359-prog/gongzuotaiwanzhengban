@@ -1,124 +1,147 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PIG_ANIM_FRAMES, PIG_ANIM_FPS, type PigAnimKey } from "../assets/pigAnim";
 
-/**
- * 小猪动画状态机 —— 真实逐帧序列播放
- *
- * 8 组动作（每组 12 帧）：
- *   idle  待机呼吸（常驻循环）
- *   blink 眨眼（低频随机）
- *   ear   耳朵轻颤（低频随机）
- *   yawn  打哈欠（挂机/下班后低频）
- *   look  抬头看时间（临近下班/停留后触发）
- *   tap   点击回弹（用户触发）
- *   coin  金币入槽（收入累计触发）
- *   off   下班庆祝（倒计时归零触发）
- *
- * 每次动作都有 anticipation → action → recovery 过渡。
- * 频率刻意压低，保持安静。
- */
-
-export type PigAction = PigAnimKey | "sleep";
+export type PigAction = PigAnimKey;
 
 interface Options {
-  resting?: boolean;   // 休息/下班状态（进入 sleep）
-  paused?: boolean;    // 完全静止（挂机）
-  onIncome?: () => void; // 由收入驱动时回调（可加音效等）
+  /** 深夜静息：继续轻呼吸，但不随机插入动作。 */
+  resting?: boolean;
+  paused?: boolean;
 }
 
-/**
- * 播放动作。返回一个可中断的令牌，避免切页后旧播放器污染。
- */
-export function usePigAnimator(opts: Options = {}) {
+const COOLDOWN_MS: Record<Exclude<PigAnimKey, "idle" | "tap" | "coin" | "off">, number> = {
+  blink: 18_000,
+  ear: 42_000,
+  look: 72_000,
+  yawn: 180_000,
+};
+
+const RANDOM_POOL: readonly Exclude<PigAnimKey, "idle" | "tap" | "coin" | "off">[] = [
+  "blink", "blink", "blink", "ear", "ear", "look", "yawn",
+];
+
+const wait = (ms: number) => new Promise<void>(resolve => window.setTimeout(resolve, ms));
+
+/** Stable, non-overlapping frame animation state machine. */
+export function usePigAnimator({ resting = false, paused = false }: Options = {}) {
   const [frameIdx, setFrameIdx] = useState(0);
-  const [action, setAction] = useState<PigAction>(opts.resting ? "sleep" : "idle");
-  const [tick, setTick] = useState(0); // 帧推进触发器
+  const [action, setAction] = useState<PigAction>("idle");
+  const [tick, setTick] = useState(0);
   const busyRef = useRef(false);
-  const seqRef = useRef<number>(0);
-  const { resting, paused } = opts;
+  const sequenceRef = useRef(0);
+  const mountedRef = useRef(true);
+  const lastPlayedRef = useRef<Partial<Record<PigAnimKey, number>>>({});
+  const lastRandomRef = useRef<PigAnimKey | null>(null);
+  const pausedRef = useRef(paused);
+  const restingRef = useRef(resting);
+  pausedRef.current = paused;
+  restingRef.current = resting;
 
-  // ---- 基础帧循环（idle 常驻） ----
   useEffect(() => {
-    if (paused) return;
-    if (resting) {
-      // sleep：用 blink 帧做慢速呼吸 + 偶尔动
-      setAction("sleep");
-      const iv = setInterval(() => setFrameIdx(i => (i + 1) % PIG_ANIM_FRAMES.blink.length), 700);
-      return () => clearInterval(iv);
-    }
-    // idle 呼吸循环（12 帧）
-    setAction("idle");
-    const iv = setInterval(() => setFrameIdx(i => (i + 1) % PIG_ANIM_FRAMES.idle.length), 1000 / PIG_ANIM_FPS.idle);
-    return () => clearInterval(iv);
-  }, [paused, resting]);
-
-  // ---- 单次动作播放器（非循环：blink/ear/yawn/look/tap/coin/off） ----
-  const play = useCallback(async (act: PigAnimKey): Promise<void> => {
-    const mySeq = ++seqRef.current;
-    if (busyRef.current && act !== "tap") return;
-    busyRef.current = true;
-    const frames = PIG_ANIM_FRAMES[act];
-    const fps = PIG_ANIM_FPS[act];
-    setAction(act);
-    for (let i = 0; i < frames.length; i++) {
-      if (mySeq !== seqRef.current) break; // 被新动作打断
-      setFrameIdx(i);
-      setTick(t => t + 1);
-      await new Promise<void>(res => setTimeout(res, 1000 / fps));
-    }
-    if (mySeq === seqRef.current) {
-      // 回到 idle
-      setAction("idle");
-      setFrameIdx(0);
-    }
-    busyRef.current = false;
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      sequenceRef.current += 1;
+      busyRef.current = false;
+    };
   }, []);
 
-  // ---- 低频随机调度（blink / ear / look / yawn） ----
+  // Preload local frames once; action changes must never flash an empty image.
+  useEffect(() => {
+    Object.values(PIG_ANIM_FRAMES).flat().forEach(src => {
+      const image = new Image();
+      image.decoding = "async";
+      image.src = src;
+    });
+  }, []);
+
+  // Idle owns its own interval. One-shot actions suspend it completely.
+  useEffect(() => {
+    if (paused || action !== "idle") return;
+    const fps = resting ? 5 : PIG_ANIM_FPS.idle;
+    const timer = window.setInterval(() => {
+      if (!busyRef.current) {
+        setFrameIdx(index => (index + 1) % PIG_ANIM_FRAMES.idle.length);
+        setTick(value => value + 1);
+      }
+    }, 1000 / fps);
+    return () => window.clearInterval(timer);
+  }, [action, paused, resting]);
+
+  useEffect(() => {
+    if (!paused) return;
+    sequenceRef.current += 1;
+    busyRef.current = false;
+    setAction("idle");
+    setFrameIdx(0);
+  }, [paused]);
+
+  const play = useCallback(async (nextAction: PigAnimKey): Promise<boolean> => {
+    if (pausedRef.current || busyRef.current) return false;
+    if (restingRef.current && !["tap", "coin", "off"].includes(nextAction)) return false;
+
+    busyRef.current = true;
+    const sequence = ++sequenceRef.current;
+    const frames = PIG_ANIM_FRAMES[nextAction];
+    const frameMs = 1000 / PIG_ANIM_FPS[nextAction];
+    lastPlayedRef.current[nextAction] = Date.now();
+    setAction(nextAction);
+    setFrameIdx(0);
+
+    for (let index = 0; index < frames.length; index += 1) {
+      if (!mountedRef.current || sequence !== sequenceRef.current) return false;
+      setFrameIdx(index);
+      setTick(value => value + 1);
+      await wait(frameMs);
+    }
+
+    if (!mountedRef.current || sequence !== sequenceRef.current) return false;
+    setAction("idle");
+    setFrameIdx(0);
+    busyRef.current = false;
+    return true;
+  }, []);
+
+  // A fresh random choice is made after every quiet gap. Per-action cooldowns
+  // prevent mechanical blink-ear-blink loops and keep yawn genuinely rare.
   useEffect(() => {
     if (paused || resting) return;
     let cancelled = false;
-    let timer: ReturnType<typeof setTimeout>;
+    let timer = 0;
 
     const schedule = () => {
-      if (cancelled) return;
-      const r = Math.random();
-      let act: PigAnimKey;
-      let delay: number;
-      if (r < 0.6) {
-        act = "blink";
-        delay = 8000 + Math.random() * 16000;   // 8-24s
-      } else if (r < 0.85) {
-        act = "ear";
-        delay = 20000 + Math.random() * 30000;  // 20-50s
-      } else if (r < 0.95) {
-        act = "look";
-        delay = 50000 + Math.random() * 60000;  // 50-110s
-      } else {
-        act = "yawn";
-        delay = 240000 + Math.random() * 240000; // 4-8min
-      }
-      timer = setTimeout(async () => {
+      const delay = 9_000 + Math.random() * 14_000;
+      timer = window.setTimeout(async () => {
         if (cancelled) return;
-        if (!busyRef.current) await play(act);
-        schedule();
+        const now = Date.now();
+        const eligible = RANDOM_POOL.filter(candidate =>
+          candidate !== lastRandomRef.current &&
+          now - (lastPlayedRef.current[candidate] ?? 0) >= COOLDOWN_MS[candidate],
+        );
+        if (eligible.length > 0 && !busyRef.current) {
+          const candidate = eligible[Math.floor(Math.random() * eligible.length)];
+          lastRandomRef.current = candidate;
+          await play(candidate);
+        }
+        if (!cancelled) schedule();
       }, delay);
     };
-    schedule();
 
+    schedule();
     return () => {
       cancelled = true;
-      if (timer) clearTimeout(timer);
+      window.clearTimeout(timer);
     };
-  }, [paused, resting, play]);
+  }, [paused, play, resting]);
 
   return {
-    frameUrl: PIG_ANIM_FRAMES[action === "sleep" ? "blink" : action][frameIdx % PIG_ANIM_FRAMES[action === "sleep" ? "blink" : action].length],
+    frameUrl: PIG_ANIM_FRAMES[action][frameIdx % PIG_ANIM_FRAMES[action].length],
     action,
     frameIdx,
     tick,
     trigger: play,
-    width: 150,
-    height: 150,
+    isBusy: busyRef.current,
+    width: 512,
+    height: 512,
   };
 }
