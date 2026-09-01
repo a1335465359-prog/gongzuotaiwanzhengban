@@ -1,0 +1,155 @@
+@import "tailwindcss";
+
+/* =====================================================================
+   Design Tokens — 一个安静的时间空间
+   参考: Soft Clay · Japanese Stationery · Quiet Luxury · Warm Minimalism
+   ===================================================================== */
+:root {
+  /* 中性色阶（暖调） */
+  --bg:         #F4F1EC;   /* 主背景，暖奶油灰 */
+  --surface-1:  #EFEAE2;   /* 抽屉/浮层 */
+  --surface-2:  #E7E0D5;   /* 更深层 */
+  --line:       #D9D2C6;   /* 时间轨道 & 分隔线 */
+
+  --ink:        #292725;   /* 主文字（近黑） */
+  --ink-2:      #8B8781;   /* 副文字 */
+  --ink-3:      #B8B2A8;   /* 弱文字（未来事件近） */
+  --ink-4:      #D3CEC5;   /* 极弱（未来事件远） */
+
+  /* 点缀色（低饱和） */
+  --accent:     #B0533B;   /* 陶土红，仅主 CTA / 关键强调 */
+  --gold:       #A98449;   /* 黄铜，仅金钱 */
+  --pig:        #E4A99A;   /* 陶粉，仅小猪 */
+
+  --shadow-soft: 0 1px 2px rgba(41,39,37,.04), 0 8px 24px -12px rgba(41,39,37,.10);
+}
+
+:root[data-theme="dark"] {
+  --bg:         #1A1815;
+  --surface-1:  #211D1A;
+  --surface-2:  #262220;
+  --line:       #2D2925;
+
+  --ink:        #EDE6DC;
+  --ink-2:      #8A847C;
+  --ink-3:      #5F5A54;
+  --ink-4:      #3B3733;
+
+  --accent:     #C97256;
+  --gold:       #C79A5C;
+  --pig:        #C48A7B;
+
+  --shadow-soft: 0 1px 2px rgba(0,0,0,.4), 0 12px 32px -12px rgba(0,0,0,.5);
+}
+
+* { -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overscroll-behavior: none;
+  overflow: hidden;      /* 场景不滚动，通过抽屉展开 */
+  overflow-x: hidden;
+}
+
+body {
+  font-family: "Inter", "PingFang SC", "HarmonyOS Sans SC", "Noto Sans SC", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100dvh;
+  transition: background-color .55s ease, color .35s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root { min-height: 100dvh; position: relative; }
+
+/* 数字字体：SF Mono-like，等宽、克制 */
+.num {
+  font-family: "SF Pro Display", "Inter", -apple-system, system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "ss01" 1;
+  letter-spacing: -0.02em;
+  font-weight: 300;
+}
+
+.num-heavy {
+  font-family: "SF Pro Display", "Inter", -apple-system, system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  letter-spacing: -0.045em;
+  font-weight: 200;
+}
+
+/* 输入框 */
+input[type=text], input[type=number], input[type=time], input[type=date], select {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 8px 2px;
+  font-size: 15px;
+  color: var(--ink);
+  width: 100%;
+  outline: none;
+  font-family: inherit;
+  transition: border-color .3s;
+}
+input:focus, select:focus {
+  border-bottom-color: var(--accent);
+}
+input::placeholder { color: var(--ink-3); }
+
+/* 隐藏滚动条 */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+/* 时间轨道刻度 */
+.tick-line {
+  height: 1px;
+  background: var(--line);
+  position: relative;
+}
+.tick-line::before, .tick-line::after {
+  content: "";
+  position: absolute;
+  top: -3px;
+  width: 1px;
+  height: 7px;
+  background: var(--line);
+}
+.tick-line::before { left: 0; }
+.tick-line::after { right: 0; }
+
+/* 呼吸 */
+@keyframes breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+.breathe { animation: breathe 5.5s ease-in-out infinite; }
+
+/* 淡入 */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.fade-in { animation: fade-in .8s ease both; }
+
+/* 首次开门动画 */
+@keyframes drift-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 安全区 */
+.safe-top { padding-top: max(env(safe-area-inset-top, 0px), 12px); }
+.safe-bot { padding-bottom: max(env(safe-area-inset-bottom, 0px), 12px); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
