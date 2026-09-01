@@ -19,7 +19,10 @@ export interface PigAnimationDefinition {
 }
 
 const frameUrls = (action: PigAnimKey): readonly string[] =>
-  Array.from({ length: 12 }, (_, index) => `/pig/${action}/${String(index + 1).padStart(2, "0")}.webp`);
+  Array.from(
+    { length: 12 },
+    (_, index) => `${import.meta.env.BASE_URL}pig/${action}/${String(index + 1).padStart(2, "0")}.webp`,
+  );
 
 export const PIG_ANIMATIONS: Record<PigAnimKey, PigAnimationDefinition> = {
   idle: { source: "01.jpg", label: "待机呼吸", frames: frameUrls("idle"), fps: 10, loop: true },
